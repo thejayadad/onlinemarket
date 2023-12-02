@@ -103,7 +103,7 @@ const Register = () => {
             <span className='text-center'>Login Now</span>
           </form>
         )}
-
+            <Link href={'/'}>Back</Link>
         <ToastContainer />
       </div>
     </section>

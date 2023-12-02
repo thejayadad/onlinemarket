@@ -1,10 +1,12 @@
 'use client'
 import Link from 'next/link';
 import React, { useState } from 'react';
-import { IoMdPerson } from 'react-icons/io';
+import { IoMdPerson, IoMdCart } from 'react-icons/io';
+import { signIn, signOut, useSession } from 'next-auth/react';
 
 const AuthLinks = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const { data: session } = useSession();
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -12,17 +14,37 @@ const AuthLinks = () => {
 
   return (
     <div className='relative inline-block text-left'>
-      <div>
-        <button
-          type='button'
-          className='inline-flex items-center justify-center p-2 rounded-full text-gray-500 hover:text-gray-800 focus:outline-none focus:ring focus:border-blue-300'
-          id='user-menu'
-          aria-haspopup='true'
-          onClick={toggleDropdown}
-        >
-          <IoMdPerson className='h-8 w-8' />
-        </button>
-      </div>
+      {session?.user ? (
+        // If there is a session, show shopping cart and log out button
+        <div className='flex items-center space-x-4'>
+          <button
+            type='button'
+            className='inline-flex items-center justify-center p-2 rounded-full text-gray-500 hover:text-gray-800 focus:outline-none border border-blue-300 focus:ring focus:border-blue-300'
+          >
+            <IoMdCart className='h-8 w-8 text-blue-300' />
+          </button>
+          <button
+            type='button'
+            className='inline-flex items-center justify-center p-2 rounded-full text-gray-500 hover:text-gray-800 focus:outline-none border border-blue-300 focus:ring focus:border-blue-300'
+            onClick={() => signOut()}
+          >
+            Log Out
+          </button>
+        </div>
+      ) : (
+        // If there is no session, show the user icon
+        <div>
+          <button
+            type='button'
+            className='inline-flex items-center justify-center p-2 rounded-full text-gray-500 hover:text-gray-800 focus:outline-none border border-blue-300 focus:ring focus:border-blue-300'
+            id='user-menu'
+            aria-haspopup='true'
+            onClick={toggleDropdown}
+          >
+            <IoMdPerson className='h-8 w-8 text-blue-300' />
+          </button>
+        </div>
+      )}
 
       {isDropdownOpen && (
         <div
